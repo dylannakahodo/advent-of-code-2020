@@ -46,27 +46,42 @@ def hgt_valid(hgt):
         return False
 
 def hcl_valid(hcl):
-    return re.match(r"#[a-f0-9]{6}", hcl)
+    return re.match(r"^#[a-f0-9]{6}$", hcl)
  
 def ecl_valid(ecl):
     valid_ecls = set(["amb", "blu", "brn", "gry", "grn", "hzl", "oth"])
     return ecl in valid_ecls
 
 def pid_valid(pid):
-    return re.match(r"[0-9]{9}", pid)
+    return re.match(r"^[0-9]{9}$", pid)
+
+def valid_fields(passport):
+    byr = passport["byr"]
+    iyr = passport["iyr"]
+    eyr = passport["eyr"]
+    hgt = passport["hgt"]
+    hcl = passport["hcl"]
+    ecl = passport["ecl"]
+    pid = passport["pid"]
+
+    return byr_valid(byr) and iyr_valid(iyr) and eyr_valid(eyr) and hgt_valid(hgt) and hcl_valid(hcl) and ecl_valid(ecl) and pid_valid(pid)
 
 if __name__ == "__main__":
     with open("input.txt") as f:
         lines = f.read()
 
     raw_passports = parse_batch_file(lines)
-    passports = [{}]
+    passports = []
 
     for raw_passport in raw_passports:
         if passport_is_valid(raw_passport):
             passport = parse_raw_passport(raw_passport)
             passports.append(passport)
-    
-    
+
+    #valid_passports = sum(1 for passport in passports if valid_fields(passport)) 
+    valid_passports = [passport for passport in passports if valid_fields(passport)]
+
+    print(len(valid_passports))
+    #131 
 
             
