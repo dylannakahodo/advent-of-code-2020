@@ -1,3 +1,5 @@
+import re
+
 required_fields = set(["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"])
 
 def parse_batch_file(batch_file):
@@ -43,6 +45,15 @@ def hgt_valid(hgt):
     except:
         return False
 
+def hcl_valid(hcl):
+    return re.match(r"#[a-f0-9]{6}", hcl)
+ 
+def ecl_valid(ecl):
+    valid_ecls = set(["amb", "blu", "brn", "gry", "grn", "hzl", "oth"])
+    return ecl in valid_ecls
+
+def pid_valid(pid):
+    return re.match(r"[0-9]{9}", pid)
 
 if __name__ == "__main__":
     with open("input.txt") as f:
@@ -54,6 +65,8 @@ if __name__ == "__main__":
     for raw_passport in raw_passports:
         if passport_is_valid(raw_passport):
             passport = parse_raw_passport(raw_passport)
-            print(byr_valid(passport["byr"]))
             passports.append(passport)
+    
+    
+
             
